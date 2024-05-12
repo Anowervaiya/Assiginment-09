@@ -52,6 +52,13 @@ async function run() {
       const result = await Assignment.insertOne(doc);
       res.send(result)
     })
+
+
+    app.get('/allassignment', async (req, res) => {
+      const cursor = await Assignment.find().toArray();
+      res.send(cursor);
+    });
+
     
      // Create a document to insert
    
