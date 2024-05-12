@@ -3,7 +3,7 @@ const app = express();
 const cors= require('cors')
 const port = process.env.port || 3000
 const dotenv = require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
 app.use(
@@ -58,7 +58,21 @@ async function run() {
       const cursor = await Assignment.find().toArray();
       res.send(cursor);
     });
+    app.delete('/delete', async (req, res) => {
+      const Id = req.query.id;
+      
+   const query = { _id: new ObjectId(Id) };
+      const result = await Assignment.deleteOne(query);
+      res.send(result)
+    })
 
+    app.get('/details', async (req, res) => {
+      const Id = req.query.id;
+    
+      const query = { _id: new ObjectId(Id) }
+      const result = await Assignment.find(query).toArray()
+      res.send(result)
+    })
     
      // Create a document to insert
    
