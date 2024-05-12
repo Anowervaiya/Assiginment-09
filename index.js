@@ -32,7 +32,7 @@ async function run() {
     await client.connect();
     const database = client.db('GroupStudy');
     const Assignment = database.collection('Assignment');
-
+const SubmitAssignment = database.collection('SubmitAssignment')
     app.post('/assignment', async (req, res) => {
       const { newAssignment } = req.body;
       const doc = {
@@ -101,6 +101,21 @@ async function run() {
       const result = await Assignment.updateOne(query, updateDoc, options);
       res.send(result);
     });
+
+    app.post('/Submit', async (req, res) => {
+      const  submit  = req.body;
+      console.log(submit);
+       const doc = {
+         UserName: submit.UserName,
+         UserEmail: submit.UserEmail,
+         UserPhoto: submit.UserPhoto,
+         File: submit.File,
+         Note : submit.note
+       };
+
+       const result = await SubmitAssignment.insertOne(doc);
+       res.send(result);
+    })
 
     // Create a document to insert
 
