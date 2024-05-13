@@ -32,7 +32,9 @@ async function run() {
     await client.connect();
     const database = client.db('GroupStudy');
     const Assignment = database.collection('Assignment');
-const SubmitAssignment = database.collection('SubmitAssignment')
+    const SubmitAssignment = database.collection('SubmitAssignment')
+    
+    
     app.post('/assignment', async (req, res) => {
       const { newAssignment } = req.body;
       const doc = {
@@ -65,7 +67,8 @@ const SubmitAssignment = database.collection('SubmitAssignment')
    
       const query = {
         _id: new ObjectId(Id),
-        email: email,
+
+        UserEmail: email,
       };
       const result = await Assignment.deleteOne(query);
       res.send(result);
@@ -103,7 +106,7 @@ const SubmitAssignment = database.collection('SubmitAssignment')
     });
 
     app.patch('/mark', async (req, res) => {
-      const mark = req.body;
+      const SubmitedValue = req.body;
       const Id = req.query.id;
       const query = {
         _id: new ObjectId(Id)
@@ -111,7 +114,8 @@ const SubmitAssignment = database.collection('SubmitAssignment')
       const updateDoc = {
         $set: {
           Status: 'Marked',
-          Mark:mark
+          Number: SubmitedValue?.Number,
+          FeedBack: SubmitedValue?.Feedback
         },
       };
       const options = { upsert: true };
@@ -133,6 +137,17 @@ const SubmitAssignment = database.collection('SubmitAssignment')
     
       res.send(result);
     })
+    app.get('/pending/:id', async (req, res) => {
+      const Id = req.params.id;
+      const query = {
+        Status: 'pending',
+        _id: new ObjectId(Id)
+      }
+      const cursor = await SubmitAssignment.find(query)
+      const result = await cursor.toArray()
+    
+      res.send(result);
+    })
 
     app.post('/Submit', async (req, res) => {
       const  submit  = req.body;
@@ -143,7 +158,9 @@ const SubmitAssignment = database.collection('SubmitAssignment')
          Status: submit.status,
          File: submit.File,
          Note: submit.note,
-         UserPhoto:submit.UserPhoto
+         UserPhoto: submit.UserPhoto,
+         AssignmentName: submit.AssignmentName,
+         TotalMarks: submit.TotalMarks,
        };
 
        const result = await SubmitAssignment.insertOne(doc);
