@@ -55,14 +55,14 @@ const SubmitAssignment = database.collection('SubmitAssignment')
       const cursor = await Assignment.find();
     
       const result = await cursor.toArray();
-      console.log(result);
+
       res.send(result);
 
     });
     app.delete('/delete', async (req, res) => {
       const Id = req.query.id;
       const email = req.query.email;
-      console.log(email);
+   
       const query = {
         _id: new ObjectId(Id),
         email: email,
@@ -73,7 +73,7 @@ const SubmitAssignment = database.collection('SubmitAssignment')
 
     app.get('/details', async (req, res) => {
       const Id = req.query.id;
-      console.log(Id);
+     
 
       const query = { _id: new ObjectId(Id) };
       const result = await Assignment.find(query).toArray();
@@ -102,19 +102,63 @@ const SubmitAssignment = database.collection('SubmitAssignment')
       res.send(result);
     });
 
+    app.patch('/mark', async (req, res) => {
+      const mark = req.body;
+      const Id = req.query.id;
+      const query = {
+        _id: new ObjectId(Id)
+      }
+      const updateDoc = {
+        $set: {
+          Status: 'Marked',
+          Mark:mark
+        },
+      };
+      const options = { upsert: true };
+      const result = await SubmitAssignment.updateOne(
+        query,
+        updateDoc,
+        options
+      );
+      res.send(result)
+
+    })
+
+    app.get('/pending', async (req, res) => {
+      const query = {
+        Status:'pending'
+      }
+      const cursor = await SubmitAssignment.find(query)
+      const result = await cursor.toArray()
+    
+      res.send(result);
+    })
+
     app.post('/Submit', async (req, res) => {
       const  submit  = req.body;
-      console.log(submit);
+    ;
        const doc = {
          UserName: submit.UserName,
          UserEmail: submit.UserEmail,
-         UserPhoto: submit.UserPhoto,
+         Status: submit.status,
          File: submit.File,
-         Note : submit.note
+         Note: submit.note,
+         UserPhoto:submit.UserPhoto
        };
 
        const result = await SubmitAssignment.insertOne(doc);
        res.send(result);
+    })
+    app.get('/attempt/:email', async (req, res) => {
+      const Email = req.params.email;
+      
+      const query = {
+        UserEmail: Email
+      }
+      const cursor = await SubmitAssignment.find(query)
+      const result = await cursor.toArray()
+     
+      res.send(result)
     })
 
     // Create a document to insert
