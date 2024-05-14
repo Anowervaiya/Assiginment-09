@@ -9,8 +9,8 @@ app.use(
   cors({
     origin: [
       'http://localhost:5173',
-      'https://cardoctor-bd.web.app',
-      'https://cardoctor-bd.firebaseapp.com',
+      'https://group-study-c6a0d.firebaseapp.com',
+      'https://group-study-c6a0d.web.app',
     ],
     credentials: true,
   })
@@ -29,7 +29,7 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    await client.connect();
+    // await client.connect();
     const database = client.db('GroupStudy');
     const Assignment = database.collection('Assignment');
     const SubmitAssignment = database.collection('SubmitAssignment')
@@ -180,7 +180,7 @@ async function run() {
 
     // Create a document to insert
 
-    await client.db('admin').command({ ping: 1 });
+    // await client.db('admin').command({ ping: 1 });
     console.log(
       'Pinged your deployment. You successfully connected to MongoDB!'
     );
