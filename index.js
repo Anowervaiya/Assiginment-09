@@ -11,8 +11,8 @@ app.use(
   cors({
     origin: [
       'http://localhost:5173',
-      'https://group-study-c6a0d.firebaseapp.com',
-      'https://group-study-c6a0d.web.app',
+      'https://splendorous-clafoutis-1c49db.netlify.app',
+      
     ],
     credentials: true,
   })
