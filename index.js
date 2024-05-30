@@ -49,6 +49,7 @@ async function run() {
     const database = client.db('GroupStudy');
     const Assignment = database.collection('Assignment');
     const SubmitAssignment = database.collection('SubmitAssignment');
+    const Routin = database.collection('Routin');
 
     app.post('/assignment', async (req, res) => {
       const { newAssignment } = req.body;
@@ -218,6 +219,34 @@ async function run() {
         })
 
         .send({ success: true });
+    })
+
+    app.put('/routin/:email', async (req, res) => {
+      const value = req.body;
+      const Email = req.params.email;
+      console.log(value ,Email);
+     
+      const filter = { email: Email };
+      const options = { upsert: true };
+      
+      const updateDoc = {
+        $set: {
+          ...value,
+        },
+      };
+      const result = await Routin.updateOne(filter, updateDoc, options);
+      
+      console.log(result);
+      res.send(result)
+
+
+    })
+
+    app.get('/routin/:email', async (req, res) => {
+      const quary = { email: req.params?.email }
+   
+      const result = await Routin.findOne(quary)
+      res.send(result);
     })
 
     // Create a document to insert
